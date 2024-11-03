@@ -34,6 +34,7 @@ void ApplicationLayerTest::initialize(int stage)
     DemoBaseApplLayer::initialize(stage);
     if (stage == 0) {
         sentMessage = false;
+        sentMessage = false;
         lastDroveAt = simTime();
         currentSubscribedServiceId = -1;
     }
