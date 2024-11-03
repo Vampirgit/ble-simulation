@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!--
+Testing pedestrians, bicycles and car traffic on Dresden OSM data.
+-->
+
+<routes>
+   <vType id="vtype0" jmIgnoreJunctionFoeProb="1.0" accel="2.6" decel="4.5" sigma="0.5" length="2.5" minGap="2.5" maxSpeed="14" color="1,1,0"/>
+   <route id="route0" edges="Bam_north_down Bam_south_down"/>
+   <flow id="flow0" type="vtype0" route="route0" begin="0" period="5" number="10"/>
+   
+   <vType id="vtype1" vClass="pedestrian" jmIgnoreFoeProb="1.0" jmIgnoreFoeSpeed="1000" jmDriveAfterRedTime="1000" speedFactor="0.25"/>
+   <person id="MaxMustermann" type="vtype1" depart="0" departPos="70">
+       <walk edges="Chem_mid_up Chem_north_up"/>
+   </person> 
+</routes>
