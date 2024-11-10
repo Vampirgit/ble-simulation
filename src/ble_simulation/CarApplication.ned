@@ -23,8 +23,8 @@
 package org.car2x.veins.subprojects.ble_simulation;
 import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
-simple ApplicationLayerTest extends DemoBaseApplLayer
+simple CarApplication extends DemoBaseApplLayer
 {
-    @class(ble_simulation::ApplicationLayerTest);
+    @class(ble_simulation::CarApplication);
     @display("i=block/app2");
 }
