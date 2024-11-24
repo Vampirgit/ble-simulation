@@ -12,7 +12,6 @@ void VruApplication::initialize(int stage)
     DemoBaseApplLayer::initialize(stage);
     if (stage == 0) {
         sentMessage = false;
-        sentMessage = false;
         lastDroveAt = simTime();
         currentSubscribedServiceId = -1;
     }
@@ -35,5 +34,8 @@ void VruApplication::handleSelfMsg(cMessage* msg)
 
 void VruApplication::handlePositionUpdate(cObject* obj)
 {
-
+    ApplicationLayerTestMessage* wsm = new ApplicationLayerTestMessage();
+    populateWSM(wsm);
+    wsm->setDemoData("Test Output");
+    sendDown(wsm);
 }
