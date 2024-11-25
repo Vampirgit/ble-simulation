@@ -2,6 +2,10 @@
 
 Sample combination of Veins and a custom project.
 
+## Veins Modifications ##
+
+- Set playgroundScaleX and playgroundScaleY to 1.0 in BaseMobility before every calculation.
+
 ## Supported program versions ##
 
 - Veins 5.2 (see <http://veins.car2x.org/>)

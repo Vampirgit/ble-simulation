@@ -36,6 +36,6 @@ void VruApplication::handlePositionUpdate(cObject* obj)
 {
     ApplicationLayerTestMessage* wsm = new ApplicationLayerTestMessage();
     populateWSM(wsm);
-    wsm->setDemoData("Test Output");
+    wsm->setDemoData("Hello I am a pedestrian!");
     sendDown(wsm);
 }
