@@ -11,9 +11,7 @@ public:
     void initialize(int stage) override;
 
 protected:
-    simtime_t lastDroveAt;
-    bool sentMessage;
-    int currentSubscribedServiceId;
+    bool isActive;
 
 protected:
     void onWSM(veins::BaseFrame1609_4* wsm) override;

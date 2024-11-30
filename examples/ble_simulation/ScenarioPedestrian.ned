@@ -31,7 +31,7 @@ import org.car2x.veins.nodes.Car;
 import org.car2x.veins.visualizer.roads.RoadsCanvasVisualizer;
 import org.car2x.veins.subprojects.ble_simulation.Pedestrian;
 
-network Scenario
+network ScenarioPedestrian
 {
     parameters:
         double playgroundSizeX @unit(m); // x size of the area the nodes are in (in meters)

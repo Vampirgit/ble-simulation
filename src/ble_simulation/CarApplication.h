@@ -11,16 +11,13 @@ public:
     void initialize(int stage) override;
 
 protected:
-    simtime_t lastDroveAt;
-    bool sentMessage;
-    int currentSubscribedServiceId;
-
-protected:
     void onWSM(veins::BaseFrame1609_4* wsm) override;
     void onWSA(veins::DemoServiceAdvertisment* wsa) override;
 
     void handleSelfMsg(cMessage* msg) override;
     void handlePositionUpdate(cObject* obj) override;
+
+    double distanceOracle(int nodeId);
 };
 
 } // namespace ble_simulation

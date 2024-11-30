@@ -19,6 +19,8 @@ import org.car2x.veins.modules.application.ieee80211p.DemoBaseApplLayer;
 
 simple VruApplication extends DemoBaseApplLayer
 {
-    @class(ble_simulation::VruApplication);
-    @display("i=block/app2");
+    parameters:
+    	@class(ble_simulation::VruApplication);
+    	@display("i=block/app2");
+    	bool isActive = default(true);
 }

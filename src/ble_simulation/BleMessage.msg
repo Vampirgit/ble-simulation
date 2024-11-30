@@ -32,8 +32,6 @@ class veins::BaseFrame1609_4;
 class noncobject veins::Coord;
 class veins::LAddress::L2Type extends void;
 
-packet ApplicationLayerTestMessage extends BaseFrame1609_4 {
-    string demoData;
-    veins::LAddress::L2Type senderAddress = -1;
-    int serial = 0;
+packet BleMessage extends BaseFrame1609_4 {
+    int nodeId;
 }
