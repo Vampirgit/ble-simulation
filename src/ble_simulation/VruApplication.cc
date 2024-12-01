@@ -35,6 +35,7 @@ void VruApplication::handlePositionUpdate(cObject* obj)
 
     BleMessage* wsm = new BleMessage();
     populateWSM(wsm);
+    wsm->setByteLength(31);
     wsm->setNodeId(getParentModule()->getId());
     sendDown(wsm);
 }
