@@ -5,6 +5,7 @@ Sample combination of Veins and a custom project.
 ## Veins Modifications ##
 
 - Set playgroundScaleX and playgroundScaleY to 1.0 in BaseMobility before every calculation.
+- Modified Decider80211p to always accept frame disregarding errors and low received power.
 
 ## Supported program versions ##
 
