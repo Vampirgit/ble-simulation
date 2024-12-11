@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-11-03 19:04:28 by Eclipse SUMO netedit Version 1.11.0
+<!-- generated on 2024-12-11 18:46:58 by Eclipse SUMO netedit Version 1.11.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -40,7 +40,7 @@
 
 <net version="1.9" junctionCornerDetail="5" walkingareas="true" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
 
-    <location netOffset="-409276.15,-5653896.18" convBoundary="0.00,0.00,1016.68,742.69" origBoundary="13.701696,51.029347,13.735142,51.047092" projParameter="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"/>
+    <location netOffset="-409276.15,-5653896.18" convBoundary="-0.00,0.00,1016.68,742.69" origBoundary="13.685882,51.021595,13.735142,51.047092" projParameter="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"/>
 
     <type id="cycleway.lane" allow="bicycle" bikeLaneWidth="1.00"/>
     <type id="cycleway.lane|highway.tertiary" priority="10" numLanes="1" speed="13.89" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" oneway="0" sidewalkWidth="3.00" bikeLaneWidth="1.00"/>
@@ -1037,7 +1037,7 @@
             <param key="origId" value="3269864"/>
         </lane>
     </edge>
-    <edge id="-4233543#3" from="534894" to="534900" name="Zwickauer Straße" priority="3" type="highway.residential" shape="142.06,437.57 139.30,433.65 82.92,354.14 73.72,340.86 64.27,327.60 36.79,289.09 5.09,243.28 0.00,235.63">
+    <edge id="-4233543#3" from="534894" to="534900" name="Zwickauer Straße" priority="3" type="highway.residential" shape="142.06,437.57 139.30,433.65 82.92,354.14 73.72,340.86 64.27,327.60 36.79,289.09 5.09,243.28 -0.00,235.63">
         <lane id="-4233543#3_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="8.33" length="238.84" shape="136.07,431.86 81.61,355.06 72.41,341.78 62.97,328.53 35.48,290.01 3.77,244.18 -1.33,236.52">
             <param key="origId" value="4233543"/>
         </lane>
@@ -1232,7 +1232,7 @@
             <param key="origId" value="415628644 1231750503 1231750503 1231750502 1231750502"/>
         </lane>
     </edge>
-    <edge id="4233543#0" from="534900" to="534894" name="Zwickauer Straße" priority="3" type="highway.residential" shape="0.00,235.63 5.09,243.28 36.79,289.09 64.27,327.60 73.72,340.86 82.92,354.14 139.30,433.65 142.06,437.57">
+    <edge id="4233543#0" from="534900" to="534894" name="Zwickauer Straße" priority="3" type="highway.residential" shape="-0.00,235.63 5.09,243.28 36.79,289.09 64.27,327.60 73.72,340.86 82.92,354.14 139.30,433.65 142.06,437.57">
         <lane id="4233543#0_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="8.33" length="238.75" shape="1.33,234.74 6.41,242.38 38.10,288.17 65.57,326.67 75.03,339.94 84.23,353.22 138.69,430.02">
             <param key="origId" value="4233543"/>
         </lane>
@@ -1578,7 +1578,7 @@
         <request index="18" response="00000000111100000010" foes="00000001111101000010" cont="0"/>
         <request index="19" response="00001111000000100000" foes="00001111010000100001" cont="0"/>
     </junction>
-    <junction id="534900" type="priority" x="0.00" y="235.63" incLanes="-4233543#3_0" intLanes=":534900_0_0" shape="0.00,235.63 -2.66,237.40 0.00,235.63">
+    <junction id="534900" type="priority" x="-0.00" y="235.63" incLanes="-4233543#3_0" intLanes=":534900_0_0" shape="-0.00,235.63 -2.66,237.40 -0.00,235.63">
         <request index="0" response="0" foes="0" cont="0"/>
     </junction>
     <junction id="7125067802" type="right_before_left" x="391.80" y="427.40" incLanes="Chem_mid_down_0 Chem_mid_down_1 Chem_mid_down_2 -695869692#1_0 -695869692#1_1 :7125067802_w1_0" intLanes=":7125067802_0_0 :7125067802_0_1 :7125067802_2_0 :7125067802_2_1 :7125067802_c0_0" shape="386.94,432.92 398.46,424.28 397.57,423.52 396.74,423.22 396.30,422.95 395.84,422.47 385.95,429.94 386.42,430.99 386.48,431.87 386.61,432.35">

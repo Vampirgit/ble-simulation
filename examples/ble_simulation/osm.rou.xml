@@ -6,7 +6,7 @@ Testing pedestrians, bicycles and car traffic on Dresden OSM data.
 
 <routes>
    <vType id="vtype0" jmIgnoreJunctionFoeProb="1.0" accel="2.6" decel="4.5" sigma="0.5" length="2.5" minGap="2.5" maxSpeed="14" color="1,1,0"/>
-   <route id="route0" edges="Bam_north_down Bam_south_down"/>
+   <route id="route0" edges="Bam_south_up Bam_north_up"/>
    <flow id="flow0" type="vtype0" route="route0" begin="0" period="5" number="1"/>
    
    <!--
