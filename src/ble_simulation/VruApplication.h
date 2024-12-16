@@ -11,9 +11,15 @@ public:
     void initialize(int stage) override;
 
 protected:
-    bool isActive;
+    simtime_t advInterval;
+    simtime_t minAdvDelay;
+    simtime_t maxAdvDelay;
+
+    cMessage* sendAdvEvt;
 
 protected:
+    void advSend();
+
     void onWSM(veins::BaseFrame1609_4* wsm) override;
     void onWSA(veins::DemoServiceAdvertisment* wsa) override;
 

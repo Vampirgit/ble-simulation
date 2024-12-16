@@ -27,4 +27,8 @@ simple CarApplication extends DemoBaseApplLayer
 {
     @class(ble_simulation::CarApplication);
     @display("i=block/app2");
+    
+    // Values should be a multiple of 0.625ms
+    double scanInterval =  default(118.125ms) @unit(s);
+    double scanWindow =  default(18.125ms) @unit(s);
 }

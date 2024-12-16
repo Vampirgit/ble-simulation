@@ -22,5 +22,9 @@ simple VruApplication extends DemoBaseApplLayer
     parameters:
     	@class(ble_simulation::VruApplication);
     	@display("i=block/app2");
-    	bool isActive = default(true);
+    	
+    	// AdvInterval should be a multiple of 0.625ms
+    	double advInterval =  default(100ms) @unit(s);
+    	double minAdvDelay = default(0ms) @unit(s);
+    	double maxAdvDelay = default(20ms) @unit(s);
 }
