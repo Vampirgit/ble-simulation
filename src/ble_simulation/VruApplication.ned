@@ -24,7 +24,7 @@ simple VruApplication extends DemoBaseApplLayer
     	@display("i=block/app2");
     	
     	// AdvInterval should be a multiple of 0.625ms
-    	double advInterval =  default(100ms) @unit(s);
+    	double advInterval =  default(100ms) @unit(s); // Between 20ms and 10.24s
     	double minAdvDelay = default(0ms) @unit(s);
     	double maxAdvDelay = default(20ms) @unit(s);
 }

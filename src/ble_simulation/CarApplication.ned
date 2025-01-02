@@ -29,6 +29,6 @@ simple CarApplication extends DemoBaseApplLayer
     @display("i=block/app2");
     
     // Values should be a multiple of 0.625ms
-    double scanInterval =  default(118.125ms) @unit(s);
-    double scanWindow =  default(18.125ms) @unit(s);
+    double scanInterval =  default(118.125ms) @unit(s); // 2.5ms to 10.24s
+    double scanWindow =  default(18.125ms) @unit(s); // 2.5ms to 10.24s
 }

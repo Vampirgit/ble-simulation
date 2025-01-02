@@ -61,12 +61,6 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
 
     // Distance
     EV_TRACE << "Oracle distance: " << distanceOracle(ble->getNodeId()) << " m" << std::endl;
-
-    // RSSI
-    PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
-    double recvPower = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
-    EV_TRACE << "Received power: " << recvPower << " dBm" << std::endl;
-
 }
 
 bool CarApplication::bleDecider(BaseFrame1609_4* frame)
@@ -75,6 +69,17 @@ bool CarApplication::bleDecider(BaseFrame1609_4* frame)
     if (simTime() > lastScan + scanWindow)
     {
         EV_TRACE << "Message was not received during the scan window!" << std::endl;
+        return false;
+    }
+
+    // Reason: RSSI
+    PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
+    double rssi = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
+    EV_TRACE << "Received power: " << rssi << " dBm" << std::endl;
+    // Without CRC
+    if (rssi <= -91.0)
+    {
+        EV_TRACE << "Message could not be decoded correctly, as the received power was too low!" << std::endl;
         return false;
     }
 
