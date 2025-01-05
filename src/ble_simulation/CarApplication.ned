@@ -28,7 +28,10 @@ simple CarApplication extends DemoBaseApplLayer
     @class(ble_simulation::CarApplication);
     @display("i=block/app2");
     
-    // Values should be a multiple of 0.625ms
-    double scanInterval =  default(118.125ms) @unit(s); // 2.5ms to 10.24s
-    double scanWindow =  default(18.125ms) @unit(s); // 2.5ms to 10.24s
+    // Values should be a multiple of 0.625ms and range from 2.5ms to 10.24s
+    double scanInterval =  default(118.125ms) @unit(s);
+    double scanWindow =  default(18.125ms) @unit(s);
+    
+    // Threshold value, uses manufacturer receiving sensitivity value but also accounts for PER.
+    double minRSSI = default(-91.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
 }

@@ -14,6 +14,8 @@ protected:
     simtime_t scanInterval;
     simtime_t scanWindow;
 
+    double minRSSI;
+
     simtime_t lastScan;
 
     cMessage* scanEvt;

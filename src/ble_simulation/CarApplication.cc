@@ -35,7 +35,6 @@ double CarApplication::distanceOracle(int nodeId)
     Coord thisPosition = thisMobilityModule->getPositionAt(simTime());
 
     return thisPosition.distance(targetPosition);
-
 }
 
 void CarApplication::onWSA(DemoServiceAdvertisment* wsa)
@@ -76,8 +75,7 @@ bool CarApplication::bleDecider(BaseFrame1609_4* frame)
     PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
     double rssi = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
     EV_TRACE << "Received power: " << rssi << " dBm" << std::endl;
-    // Without CRC
-    if (rssi <= -91.0)
+    if (rssi <= -minRSSI)
     {
         EV_TRACE << "Message could not be decoded correctly, as the received power was too low!" << std::endl;
         return false;
