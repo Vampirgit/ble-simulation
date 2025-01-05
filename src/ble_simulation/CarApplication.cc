@@ -16,6 +16,8 @@ void CarApplication::initialize(int stage)
     scanInterval = par("scanInterval").doubleValue();
     scanWindow = par("scanWindow").doubleValue();
 
+    minRSSI = par("minRSSI").doubleValue();
+
     if (stage == 0)
     {
         scanEvt = new cMessage("scanEvt");
@@ -75,7 +77,7 @@ bool CarApplication::bleDecider(BaseFrame1609_4* frame)
     PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
     double rssi = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
     EV_TRACE << "Received power: " << rssi << " dBm" << std::endl;
-    if (rssi <= -minRSSI)
+    if (rssi <= minRSSI)
     {
         EV_TRACE << "Message could not be decoded correctly, as the received power was too low!" << std::endl;
         return false;
