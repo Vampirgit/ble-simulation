@@ -16,7 +16,9 @@ void CarApplication::initialize(int stage)
     scanInterval = par("scanInterval").doubleValue();
     scanWindow = par("scanWindow").doubleValue();
 
-    minRSSI = par("minRSSI").doubleValue();
+    minRssi = par("minRssi").doubleValue();
+    rssiVariance = par("rssiVariance").doubleValue();
+    calibratedRssi = par("calibratedRssi").doubleValue();
 
     if (stage == 0)
     {
@@ -39,6 +41,18 @@ double CarApplication::distanceOracle(int nodeId)
     return thisPosition.distance(targetPosition);
 }
 
+double CarApplication::distanceEstimation(double& rssi)
+{
+    // Measurement accuracy modeling
+    rssi = rssi + uniform(-rssiVariance, rssiVariance);
+
+    // According to Log-distance path loss model: Distance = 10 ^ ((Power at one meter - RSSI)/(10 * N));
+    // Environment factor N = 2, because open space
+    double estimatedDistance = pow(10, (calibratedRssi - rssi) / (10 * 2));
+
+    return estimatedDistance;
+}
+
 void CarApplication::onWSA(DemoServiceAdvertisment* wsa)
 {
 
@@ -46,7 +60,10 @@ void CarApplication::onWSA(DemoServiceAdvertisment* wsa)
 
 void CarApplication::onWSM(BaseFrame1609_4* frame)
 {
-    if (!bleDecider(frame))
+    PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
+    double rssi = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
+
+    if (!bleDecider(frame, rssi))
     {
         EV_TRACE << "Message was rejected!" << std::endl;
         return;
@@ -60,11 +77,22 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
     // Packet Length
     EV_TRACE << "Packet length: " << ble->getByteLength() << " byte" << std::endl;
 
-    // Distance
-    EV_TRACE << "Oracle distance: " << distanceOracle(ble->getNodeId()) << " m" << std::endl;
+    // Estimated Distance
+    double estimatedDistance = distanceEstimation(rssi);
+    EV_TRACE << "Estimated distance: " << estimatedDistance << " m" << std::endl;
+
+    // Oracle Distance
+    double oracleDistance = distanceOracle(ble->getNodeId());
+    EV_TRACE << "Oracle distance: " << oracleDistance << " m" << std::endl;
+
+    // Distance delta
+    EV_TRACE << "Distance delta: " << fabs(oracleDistance - estimatedDistance) << " m" << std::endl;
+
+    // RSSI Info
+    EV_TRACE << "Measured power: " << rssi << " dBm" << std::endl;
 }
 
-bool CarApplication::bleDecider(BaseFrame1609_4* frame)
+bool CarApplication::bleDecider(BaseFrame1609_4* frame, double& rssi)
 {
     // Reason: Out of scanning window
     if (simTime() > lastScan + scanWindow)
@@ -74,14 +102,13 @@ bool CarApplication::bleDecider(BaseFrame1609_4* frame)
     }
 
     // Reason: RSSI
-    PhyToMacControlInfo* phyToMacControlInfo = check_and_cast<PhyToMacControlInfo*>(frame->getControlInfo());
-    double rssi = check_and_cast<DeciderResult80211*>(phyToMacControlInfo->getDeciderResult())->getRecvPower_dBm();
-    EV_TRACE << "Received power: " << rssi << " dBm" << std::endl;
-    if (rssi <= minRSSI)
+    if (rssi <= minRssi)
     {
         EV_TRACE << "Message could not be decoded correctly, as the received power was too low!" << std::endl;
+        EV_TRACE << "Received power: " << rssi << " dBm" << " is under minRssi: "<< minRssi << " dBm" << std::endl;
         return false;
     }
+    EV_TRACE << "Received power: " << rssi << " dBm" << std::endl;
 
     return true;
 }

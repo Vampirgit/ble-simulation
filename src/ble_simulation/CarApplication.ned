@@ -33,5 +33,12 @@ simple CarApplication extends DemoBaseApplLayer
     double scanWindow =  default(18.125ms) @unit(s);
     
     // Threshold value, uses manufacturer receiving sensitivity value but also accounts for PER.
-    double minRSSI = default(-91.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
+    double minRssi = default(-91.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
+	
+	// Measurement accuracy of rssi
+	double rssiVariance = default(6dBm) @unit(dBm); // Should be a good average default according to research.
+	
+	// RSSI at 1 meter (factory-calibrated default, technically sent from advertiser but abstracted and averaged here)
+	// Two possibilies: Average default is around -51dBm at 8dBm according to some tables but measured in simulation is -45dBm...
+	double calibratedRssi = default(-45dBm) @unit(dBm); 
 }

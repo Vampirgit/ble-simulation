@@ -14,7 +14,9 @@ protected:
     simtime_t scanInterval;
     simtime_t scanWindow;
 
-    double minRSSI;
+    double minRssi;
+    double rssiVariance;
+    double calibratedRssi;
 
     simtime_t lastScan;
 
@@ -23,14 +25,14 @@ protected:
     void onWSM(veins::BaseFrame1609_4* wsm) override;
     void onWSA(veins::DemoServiceAdvertisment* wsa) override;
 
-    bool bleDecider(veins::BaseFrame1609_4* frame);
+    bool bleDecider(veins::BaseFrame1609_4* frame, double& rssi);
 
     void handleSelfMsg(cMessage* msg) override;
     void handlePositionUpdate(cObject* obj) override;
 
 
-
     double distanceOracle(int nodeId);
+    double distanceEstimation(double& rssi);
 };
 
 } // namespace ble_simulation
