@@ -48,7 +48,7 @@ double CarApplication::distanceEstimation(double& rssi)
 
     // According to Log-distance path loss model: Distance = 10 ^ ((Power at one meter - RSSI)/(10 * N));
     // Environment factor N = 2, because open space.
-    // A more accurate function would need the reference RSSI to be calculated at different distances.
+    // A more accurate function would need the reference RSSI to be calculated at different distances
     // Technically it is better to use the median RSSI with a Kalman filter, but for simplicity:
     double estimatedDistance = pow(10, (calibratedRssi - rssi) / (10 * 2));
 
@@ -95,10 +95,40 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
     EV_TRACE << "Measured power: " << rssi << " dBm" << std::endl;
 
     // Collision warning
+    /* It is not impossible to determine (or estimate) the VRU's position using only the speed vector of VRU, the car and
+     * the estimated distance to the VRU. In practice, this would require extrapolating the direction
+     * of the VRU out of these values over multiple time points. For simplicity, we will just assume that we already have this
+     * angle, although the estimated distance will still have an effect on the accuracy of the prediction.     */
     cModule* thisMobility = getParentModule()->getSubmodule("veinsmobility");
     TraCIMobility* thisMobilityModule = check_and_cast<TraCIMobility*>(thisMobility);
-    // Coord COLPOINT = Coord({471, 267}); // approx. to intersection center
-    // Coord thisPosition = thisMobilityModule->getPositionAt(simTime());
+    cModule* targetNode = getSimulation()->getModule(ble->getNodeId());
+    cModule* targetMobility = targetNode->getSubmodule("veinsmobility");
+    BaseMobility* targetMobilityModule = check_and_cast<BaseMobility*>(targetMobility);
+
+    Coord vruPosition = targetMobilityModule->getPositionAt(simTime());
+    Coord thisPosition = thisMobilityModule->getPositionAt(simTime());
+    Coord directionToVru = vruPosition - thisPosition;
+    Coord directionToVruNorm = directionToVru * (1.0 / directionToVru.length());
+    Coord estimatedVruPosition = thisPosition + directionToVruNorm * estimatedDistance;
+
+    EV_TRACE << "Estimated Position of the VRU: " << estimatedVruPosition << std::endl;
+
+    Coord vruSpeed = ble->getSpeedVector();
+    Coord carSpeed = thisMobilityModule->getHeading().toCoord() * thisMobilityModule->getSpeed();
+
+    Coord carNormal = Coord(-carSpeed.y, carSpeed.x, 0);
+    Coord relativePosition = thisPosition - estimatedVruPosition;
+    double numerator = carNormal * relativePosition;
+    double denominator = carNormal * vruSpeed;
+    double intersectionTime = numerator / denominator;
+
+    Coord carPositionAtIntersection = thisPosition + carSpeed * intersectionTime;
+    Coord intersectionPoint = estimatedVruPosition + vruSpeed * intersectionTime;
+    double distanceToIntersection = (intersectionPoint - thisPosition).length();
+
+    EV_TRACE << "Intersection Point: " << intersectionPoint << std::endl;
+    EV_TRACE << "Distance to Intersection: " << distanceToIntersection << "m" << std::endl;
+
     double mpsSpeed = thisMobilityModule->getSpeed();
     double kmhSpeed = mpsSpeed * 3.6;
 
@@ -108,11 +138,11 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
     double brakingThreshold = stoppingDistance + 10;
     EV_TRACE << "Braking Threshold: " << brakingThreshold << "m" << std::endl;
 
-    if (estimatedDistance < stoppingDistance)
+    if (distanceToIntersection < stoppingDistance)
     {
         EV_WARN << "COLLISION INBOUND!" << std::endl;
     }
-    else if (estimatedDistance < brakingThreshold)
+    else if (distanceToIntersection < brakingThreshold)
     {
         EV_WARN << "AUTOMATIC BRAKING SYSTEM ENGAGED!" << std::endl;
     }
@@ -120,12 +150,6 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
     {
         EV_TRACE << "No potential for collision detected. " << std::endl;
     }
-
-    /* TODO:
-     Send speed vector over BLE (Kalman Filter, GPS etc.) and use it to calculate the estimated collision point,
-     then compare the distance to the collision point with the stopping distance.
-    */
-
 }
 
 bool CarApplication::bleDecider(BaseFrame1609_4* frame, double& rssi)

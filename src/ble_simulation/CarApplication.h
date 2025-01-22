@@ -26,10 +26,10 @@ protected:
     void onWSA(veins::DemoServiceAdvertisment* wsa) override;
 
     bool bleDecider(veins::BaseFrame1609_4* frame, double& rssi);
+    void collisionPredictor(veins::BaseFrame1609_4* frame);
 
     void handleSelfMsg(cMessage* msg) override;
     void handlePositionUpdate(cObject* obj) override;
-
 
     double distanceOracle(int nodeId);
     double distanceEstimation(double& rssi);

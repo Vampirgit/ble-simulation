@@ -32,6 +32,11 @@
 -->
 
 <root>
+	<Antenna type="SampledAntenna1D" id="antenna1">
+        <!-- Write the samples in the value attribute, separated by spaces. The values will be -->
+        <!-- distributed equidistantly, e.g. 4 values will be placed at 0°, 90°, 180° and 270° -->
+        <parameter name="samples" type="string" value="2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2"/>
+    </Antenna>
     <Antenna type="SampledAntenna1D" id="monopole">
         <!-- monopole antenna on roof -->
         <!-- samples taken from "Effects of Antenna Characteristics and Placements on a Vehicle-to-Vehicle Channel Scenario" -->

@@ -24,9 +24,17 @@ void VruApplication::initialize(int stage)
 
 void VruApplication::advSend()
 {
+    // Calculate speed vector (in practice, calculated over multiple frames using different types of sensors e.g. GPS etc.)
+    cModule* thisMobility = getParentModule()->getSubmodule("veinsmobility");
+    BaseMobility* thisMobilityModule = check_and_cast<BaseMobility*>(thisMobility);
+    Coord speedVector = thisMobilityModule->getCurrentSpeed();
+
+    EV_TRACE << "VRU current speed vector: " << speedVector << std::endl;
+
     BleMessage* ble = new BleMessage();
     populateWSM(ble);
     ble->setByteLength(31);
+    ble->setSpeedVector(speedVector);
     ble->setNodeId(getParentModule()->getId());
     sendDown(ble);
 }

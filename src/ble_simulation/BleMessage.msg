@@ -34,4 +34,5 @@ class veins::LAddress::L2Type extends void;
 
 packet BleMessage extends BaseFrame1609_4 {
     int nodeId;
+    veins::Coord speedVector;
 }
