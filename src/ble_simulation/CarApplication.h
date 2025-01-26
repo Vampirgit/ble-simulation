@@ -15,8 +15,12 @@ protected:
     simtime_t scanWindow;
 
     double minRssi;
-    double rssiVariance;
+    double rssiDeviation;
     double calibratedRssi;
+
+    int distanceMode;
+    double distanceModelError;
+    double distanceModelComputationLatency;
 
     simtime_t lastScan;
 
@@ -32,7 +36,7 @@ protected:
     void handlePositionUpdate(cObject* obj) override;
 
     double distanceOracle(int nodeId);
-    double distanceEstimation(double& rssi);
+    double distanceEstimation(double& rssi, double oracleDistance);
 };
 
 } // namespace ble_simulation

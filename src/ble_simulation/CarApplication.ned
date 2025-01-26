@@ -36,9 +36,13 @@ simple CarApplication extends DemoBaseApplLayer
     double minRssi = default(-91.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
 	
 	// Measurement accuracy of rssi
-	double rssiVariance = default(6dBm) @unit(dBm); // Should be a good average default according to research.
+	double rssiDeviation = default(5dBm) @unit(dBm); // Should be a good average default according to research.
 	
 	// RSSI at 1 meter (factory-calibrated default, technically sent from advertiser but abstracted and averaged here)
-	// Two possibilies: Average default is around -51dBm at 8dBm according to some tables but measured in simulation is -45dBm...
-	double calibratedRssi = default(-45dBm) @unit(dBm); 
+	// Here at 20 meter measured in-simulation:
+	double calibratedRssi = default(-61.88dBm) @unit(dBm); 
+	
+	int distanceMode = default(0);
+	double distanceModelError = default(3.26);
+	double distanceModelComputationLatency = default(0.0000553s) @unit(s); // Kalman-filtering 28.7µs + 26.6µs for path-loss model
 }
