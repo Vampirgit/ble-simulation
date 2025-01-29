@@ -20,7 +20,7 @@ void CarApplication::initialize(int stage)
     rssiDeviation = par("rssiDeviation").doubleValue();
     calibratedRssi = par("calibratedRssi").doubleValue();
 
-    distanceMode = par("distanceMode").doubleValue()
+    distanceMode = par("distanceMode").intValue();
     distanceModelError = par("distanceModelError").doubleValue();
     distanceModelComputationLatency = par("distanceModelComputationLatency").doubleValue();
 
@@ -47,39 +47,42 @@ double CarApplication::distanceOracle(int nodeId)
 
 double CarApplication::distanceEstimation(double& rssi, double oracleDistance)
 {
-    // Measurement accuracy modeling
-    rssi = rssi + uniform(-rssiDeviation, rssiDeviation);
-
-    double referenceDistance = 20.0;
+    // Environmental constant
     double a = 2.0;
-    double estimatedDistance = 0.0;
 
+    // Option 0: Simulated log-distance path loss model
+    // CalibratedRssi is heavily dependent on multiple simulation parameters, including broadcast power, antenna gain and
+    // the SimplePathlossModel in config.xml.
+    double estimatedDistanceCustom = pow(10, (calibratedRssi - rssi) / (10 * a));
+    EV_TRACE << "Estimated distance from simulation data: " << estimatedDistanceCustom << " m" << std::endl;
+
+    // Option 1: Non-tunable model
+    double refRssi = calibratedRssi - (10*a) * log10(oracleDistance);
+    EV_TRACE << "Calculated reference RSSI: " << refRssi << " dBm" << std::endl;
+    double rssiDelta =  refRssi - rssi;
+    double correctedRssi = refRssi + uniform(0, rssiDeviation) + rssiDelta;
+    double estimatedDistanceNonTunable = pow(10, (calibratedRssi - correctedRssi) / (10 * a));
+    EV_TRACE << "Estimated distance from non-tunable model: " << estimatedDistanceNonTunable << " m" << std::endl;
+
+    // Option 2: Tunable model
+    // TODO: Insert latency for computation of Kalman Filter (36?)
+    double estimatedDistanceTunable = oracleDistance + uniform(-distanceModelError, distanceModelError);
+    EV_TRACE << "Estimated distance from tunable model: " << estimatedDistanceTunable << " m" << std::endl;
+
+    double estimatedDistance = 0.0;
     switch(distanceMode)
     {
     case 0:
-        // Option 1: Simulated log-distance path loss model
-        // CalibratedRssi is heavily dependent on multiple simulation parameters, including broadcast power, antenna gain and
-        // the SimplePathlossModel in config.xml. Additionally, object shadowing would in theory influence a:
-        estimatedDistance = referenceDistance * pow(10, (calibratedRssi - rssi) / (10 * a));
-
-        EV_TRACE << "Estimated distance from simulation data: " << estimatedDistance << " m" << std::endl;
+        estimatedDistance = estimatedDistanceCustom;
         break;
     case 1:
-        // Option 2: Non-tunable model
-        // TODO: Insert latency for computation of Kalman Filter (36?) and general path-loss model (26.6?)
-        // TODO: Find better model
-        double standardDeviation = (oracleDistance) * (log(10)/(10*a)) * rssiDeviation;
-        EV_TRACE << "Calculated deviation for the non-tunable model: " << standardDeviation << " m" << std::endl;
-        estimatedDistance = oracleDistance + uniform(-standardDeviation, standardDeviation);
-        EV_TRACE << "Estimated distance from non-tunable model: " << estimatedDistance << " m" << std::endl;
+        estimatedDistance = estimatedDistanceNonTunable;
         break;
     case 2:
-        // Option 3: Tunable model
-        // TODO: Implement Latency
-        estimatedDistance = oracleDistance + uniform(-distanceModelError, distanceModelError);
-        EV_TRACE << "Estimated distance from tunable model: " << estimatedDistance << " m" << std::endl;
+        estimatedDistance = estimatedDistanceTunable;
         break;
     }
+
     return estimatedDistance;
 }
 
@@ -117,9 +120,6 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
     // Distance delta
     double distanceDelta = fabs(oracleDistance - estimatedDistance);
     EV_TRACE << "Distance delta: " << distanceDelta << " m" << std::endl;
-
-    // RSSI Info
-    EV_TRACE << "RSSI with measurement errors: " << rssi << " dBm" << std::endl;
 
     // Collision warning
     /* It is not impossible to determine (or estimate) the VRU's position using only the speed vector of VRU, the car and
