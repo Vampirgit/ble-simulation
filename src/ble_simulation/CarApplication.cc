@@ -21,8 +21,8 @@ void CarApplication::initialize(int stage)
     calibratedRssi = par("calibratedRssi").doubleValue();
 
     distanceMode = par("distanceMode").intValue();
-    distanceModelError = par("distanceModelError").doubleValue();
-    distanceModelComputationLatency = par("distanceModelComputationLatency").doubleValue();
+    rssiTunableError = par("rssiTunableError").doubleValue();
+    rssiTunableKalmanReduction = par("rssiTunableKalmanReduction").doubleValue();
 
     if (stage == 0)
     {
@@ -60,13 +60,21 @@ double CarApplication::distanceEstimation(double& rssi, double oracleDistance)
     double refRssi = calibratedRssi - (10*a) * log10(oracleDistance);
     EV_TRACE << "Calculated reference RSSI: " << refRssi << " dBm" << std::endl;
     double rssiDelta =  refRssi - rssi;
-    double correctedRssi = refRssi + uniform(0, rssiDeviation) + rssiDelta;
+    //Sub-linear growth of RSSI deviation
+    rssiDeviation = 2 + 2 * log10(oracleDistance);
+    rssiDeviation = rssiDeviation * 0.27;
+    EV_TRACE << "RSSI DEVIATION: " << rssiDeviation << " dBm" << std::endl;
+    double correctedRssi = refRssi - uniform(0, rssiDeviation) - fabs(rssiDelta);
     double estimatedDistanceNonTunable = pow(10, (calibratedRssi - correctedRssi) / (10 * a));
     EV_TRACE << "Estimated distance from non-tunable model: " << estimatedDistanceNonTunable << " m" << std::endl;
 
     // Option 2: Tunable model
-    // TODO: Insert latency for computation of Kalman Filter (36?)
-    double estimatedDistanceTunable = oracleDistance + uniform(-distanceModelError, distanceModelError);
+    // Latency for computation of Kalman Filter (to 27% reduction in rssi deviation after 5 measurements),
+    // accuracy does not scale with further measurements.
+    rssiDeviation = rssiTunableError;
+    rssiDeviation = rssiDeviation * rssiTunableKalmanReduction;
+    correctedRssi = refRssi - uniform(0, rssiDeviation) - fabs(rssiDelta);
+    double estimatedDistanceTunable = pow(10, (calibratedRssi - correctedRssi) / (10 * a));
     EV_TRACE << "Estimated distance from tunable model: " << estimatedDistanceTunable << " m" << std::endl;
 
     double estimatedDistance = 0.0;

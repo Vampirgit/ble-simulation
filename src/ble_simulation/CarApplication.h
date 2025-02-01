@@ -19,8 +19,8 @@ protected:
     double calibratedRssi;
 
     int distanceMode;
-    double distanceModelError;
-    double distanceModelComputationLatency;
+    double rssiTunableError;
+    double rssiTunableKalmanReduction;
 
     simtime_t lastScan;
 

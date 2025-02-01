@@ -33,7 +33,7 @@ simple CarApplication extends DemoBaseApplLayer
     double scanWindow =  default(18.125ms) @unit(s);
     
     // Threshold value, uses manufacturer receiving sensitivity value but also accounts for PER.
-    double minRssi = default(-91.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
+    double minRssi = default(-87.0dBm) @unit(dBm); // Without CRC, NOT using minimum receiver sensitivity as a threshold, but instead a realistic value that has a PER of 1%
 	
 	// Measurement accuracy of rssi
 	double rssiDeviation = default(6dBm) @unit(dBm); // Should be a good average default according to research.
@@ -42,6 +42,6 @@ simple CarApplication extends DemoBaseApplLayer
 	double calibratedRssi = default(-37.2dBm) @unit(dBm); 
 	
 	int distanceMode = default(1);
-	double distanceModelError = default(3.26);
-	double distanceModelComputationLatency = default(0.0000366s) @unit(s); // Kalman-filtering 36.6µs
+	double rssiTunableError = default(3.26);
+	double rssiTunableKalmanReduction = default(0.27); // Kalman-filtering default 27%
 }
