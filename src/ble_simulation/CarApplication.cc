@@ -176,6 +176,7 @@ void CarApplication::onWSM(BaseFrame1609_4* frame)
         {
             outFile << simTime().format(-2) << ", " << oracleDistance << " m" << ", " << -2 << "\n";
         }
+        outFile.close();
         return;
     }
 
