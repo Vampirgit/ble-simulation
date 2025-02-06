@@ -73,7 +73,7 @@ double CarApplication::distanceEstimation(double& rssi, double oracleDistance)
     double refRssi = calibratedRssi - (10*a) * log10(oracleDistance);
     EV_TRACE << "Calculated reference RSSI: " << refRssi << " dBm" << std::endl;
     double rssiDelta =  refRssi - rssi;
-    // Sub-linear growth of RSSI deviation, constant deviation due to absorption and reflection (e.g. sensor positioning,
+    // Logarithmic growth of RSSI deviation, constant deviation due to absorption and reflection (e.g. sensor positioning,
     // object shadowing etc.). Shadowing due to buildings added later.
     rssiDeviation = 2 + 6 * log10(oracleDistance);
     // Apply Kalman Filter with reduction to a max 27% depending on the package rate with exponential decay.
@@ -90,12 +90,12 @@ double CarApplication::distanceEstimation(double& rssi, double oracleDistance)
     EV_TRACE << "Estimated distance from non-tunable model: " << estimatedDistanceNonTunable << " m" << std::endl;
 
     // Option 2: Tunable model
-    rssiDeviation = rssiTunableError;
+    // rssiTunableError = 2 + 6 * log10(oracleDistance);
     if (pps > 1.0)
     {
         kalmanReduction = 0.9 * exp((log(rssiTunableKalmanReduction / 0.9) / pow(4, 0.5)) * pow(pps - 1, 0.5));
     }
-    rssiDeviation = rssiDeviation * kalmanReduction;
+    rssiDeviation = rssiTunableError * kalmanReduction;
     correctedRssi = refRssi - uniform(-rssiDeviation, rssiDeviation) - fabs(rssiDelta);
     double estimatedDistanceTunable = pow(10, (calibratedRssi - correctedRssi) / (10 * a));
     EV_TRACE << "Estimated distance from tunable model: " << estimatedDistanceTunable << " m" << std::endl;

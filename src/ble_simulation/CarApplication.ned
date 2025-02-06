@@ -42,7 +42,7 @@ simple CarApplication extends DemoBaseApplLayer
 	// RSSI at 1 meter (factory-calibrated default, technically sent from advertiser but abstracted and averaged here)
 	double calibratedRssi = default(-37.2dBm) @unit(dBm); 
 	
-	int distanceMode = default(1);
-	double rssiTunableError = default(3.26);
+	int distanceMode = default(2);
+	double rssiTunableError = default(2);
 	double rssiTunableKalmanReduction = default(0.27); // Kalman-filtering default 27%
 }
