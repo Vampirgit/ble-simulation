@@ -1,6 +1,6 @@
 # BLE Simulation #
 
-Sample combination of Veins and a custom project.
+Project built upon Omnet++, Veins and Sudo to analyze the performance of Bluetooth Low Energy (BLE) communication for protecting vulnerable road users.
 
 ## Veins Modifications ##
 
